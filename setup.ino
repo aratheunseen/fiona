@@ -15,7 +15,7 @@ CTBot fiona;
 String SSID = "";
 String PASSWORD = "";
 
-// Secret Code
+// Secret Code (Telegram API Key)
 String KEY = "";
 
 // Set FionaID
@@ -32,12 +32,12 @@ char* FionaID2 = "";
 
 // Emergency Checker Function
 int IsEmergency(String text) {
-  String splitedText = text.substring(0, 9);
+  String splitedText = text.substring(0, 10);
 
   for (int i = 0; i < splitedText.length(); i++) {
     splitedText[i] = tolower(splitedText[i]);
   }
-  String emergency = "emergency";
+  String emergency = "/emergency";
   Serial.println(splitedText);
 
   if (splitedText == emergency) {
@@ -101,19 +101,27 @@ void loop() {
       String text = (String)notice.text;
 
       if (notice.text.equalsIgnoreCase("/start")) {
-        //Send FionaID to sender
-        String welcome = (String) "Hello, Welcome! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n Thanks <3.";
+        // Send welcome message to sender
+        String welcome = (String) "Hello! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n Type '/help' to learn more.\n\n Thanks <3.";
         fiona.sendMessage(notice.sender.id, welcome);
+      } else if (notice.text.equalsIgnoreCase("/help")) {
+        // Send help page to sender
+        String help = (String) "use\n\n/emergency notice_text - Send notice with emergency priority.\n\nnotice_text - Send notice without any priority.\n\nnotice_Text must be longer than 10 characters.";
+        fiona.sendMessage(notice.sender.id, help);
       } else {
         if (text.length() < 10) {
           String report = (String) "Unable to publish. It is too short or an invalid notice.";
           fiona.sendMessage(notice.sender.id, report);
-        } else if (IsEmergency(text) == 1) {
-          // Send Roll Out as Emergency Report
+        } else if (IsEmergency(text) == 1 && text.length() < 12) {
+          // Send notice as False Emergency
+          String report = (String) "Invalid notice. Type '/emergency your_notice_text' to send emergency notice.";
+          fiona.sendMessage(notice.sender.id, report);
+        } else if (IsEmergency(text) == 1 && text.length() > 11) {
+          // Send notice as emergency report
           String report = (String) "Notice has been published as emergency.";
           fiona.sendMessage(notice.sender.id, report);
         } else {
-          // Send Roll Out Report
+          // Send notice delivered report
           String report = (String) "Notice has been published.";
           fiona.sendMessage(notice.sender.id, report);
         }
