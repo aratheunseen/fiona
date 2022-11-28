@@ -1,7 +1,14 @@
+/*----------- Included Libraries ------------*/
+
+#include <bits/stdc++.h>
 //#include <LiquidCrystal.h>
 #include "CTBot.h"
 
-// Our Bot (Kitty) is Fiona.
+using namespace std;
+
+
+/*------------ All about Connections ------------*/
+
 CTBot fiona;
 
 // Set Your Wi-Fi SSID Name and Password
@@ -12,72 +19,105 @@ String PASSWORD = "";
 String KEY = "";
 
 // Set FionaID
-char* FionaID = "";
-
-// Set LCD Pin
-/*const int rs = 12, en = 11, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);*/
+char* FionaID0 = "";
+char* FionaID1 = "";
+char* FionaID2 = "";
 
 
+/*------------ Global Variables and Functions ------------*/
+
+// Set 16x2 LCD Pin
+//const int rs = 12, en = 11, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
+//LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+// Emergency Checker Function
+int IsEmergency(String text) {
+  String splitedText = text.substring(0, 9);
+
+  for (int i = 0; i < splitedText.length(); i++) {
+    splitedText[i] = tolower(splitedText[i]);
+  }
+  String emergency = "emergency";
+  Serial.println(splitedText);
+
+  if (splitedText == emergency) {
+    return 1;
+  }
+  return 0;
+}
+
+
+/*------------ Setup Section ------------*/
 void setup() {
-	Serial.begin(115200);
-	Serial.println("Starting Fiona...");
-
-  //lcd.begin(16,2);
+  Serial.begin(115200);
 
   // Connect with Internet
-	fiona.wifiConnect(SSID, PASSWORD);
+  fiona.wifiConnect(SSID, PASSWORD);
 
   // Connect with Telegram
-	fiona.setTelegramToken(KEY);
+  fiona.setTelegramToken(KEY);
 
-	// Check the Internet Connection
-	if (fiona.testConnection()){
-		Serial.println("\nYou are awesome.");
+  // Check the Internet Connection
+  if (fiona.testConnection()) {
+    Serial.println("\nYou are awesome. Thanks for feeding me internet.");
     // If Internet Connection is Ok then 'TURN ON' Built In LED
     pinMode(2, OUTPUT);
     digitalWrite(2, LOW);
+  } else {
+    // If Internet Connection is not Ok
+    Serial.println("\nOhho! No Internet. I am Hungry.");
   }
-	else{
-		Serial.println("\nSorry, No Internet.");
-  }
+
+  // Start LCD
+  //lcd.begin(16,2);
 }
 
-void loop() {
-	TBMessage notice;
 
-	// Check Incoming Message
-	if (CTBotMessageText == fiona.getNewMessage(notice)) {
-    char* ID = (char*) notice.sender.id;
-    if(std::strcmp(ID,FionaID)){
-      Serial.println(notice.text); // dummy line
+/*------------ Loop Section ------------*/
+
+void loop() {
+  TBMessage notice;
+
+  // Check Incoming Message
+  if (CTBotMessageText == fiona.getNewMessage(notice)) {
+    char* ID = (char*)notice.sender.id;
+    if (strcmp(ID, FionaID0) || strcmp(ID, FionaID1) || strcmp(ID, FionaID2)) {
+      Serial.println(notice.text);  // dummy line
 
       digitalWrite(D1, LOW);
-      if(D1==LOW){
+      if (D1 == LOW) {
         //lcd.setCursor(0,0);
         //lcd.print(notice.text);
-        Serial.println(notice.text); // dummy line
+        Serial.println(notice.text);  // dummy line
       }
 
       // 1 = notice.text contains emergency word turn on second led
-      if(D1==LOW && 1){
-        digitalWrite(D2,LOW);
+      if (D1 == LOW && 1) {
+        digitalWrite(D2, LOW);
       }
+
+      /*------------ Response Message ------------*/
+
+      String text = (String)notice.text;
 
       if (notice.text.equalsIgnoreCase("/start")) {
-        // do nothing boss
-      }
-
-      if (notice.text.equalsIgnoreCase("hi fiona")) {
         //Send FionaID to sender
-        String id = (String) "Hello, Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique. Thanks senorita <3.";
-        fiona.sendMessage(notice.sender.id,id);
-      }
-      else {
-        // Send Roll Out Text
-        String reply = (String)"Notice has been published.";
-        fiona.sendMessage(notice.sender.id, reply);
+        String welcome = (String) "Hello, Welcome! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n Thanks <3.";
+        fiona.sendMessage(notice.sender.id, welcome);
+      } else {
+        if (text.length() < 10) {
+          String report = (String) "Unable to publish. It is too short or an invalid notice.";
+          fiona.sendMessage(notice.sender.id, report);
+        } else if (IsEmergency(text) == 1) {
+          // Send Roll Out as Emergency Report
+          String report = (String) "Notice has been published as emergency.";
+          fiona.sendMessage(notice.sender.id, report);
+        } else {
+          // Send Roll Out Report
+          String report = (String) "Notice has been published.";
+          fiona.sendMessage(notice.sender.id, report);
+        }
       }
     }
-	}
+  }
 }
