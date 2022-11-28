@@ -1,2 +1,2 @@
-# fiona: a notice bot
+# Fiona: a notice bot
 
