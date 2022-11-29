@@ -1,7 +1,7 @@
 /*----------- Included Libraries ------------*/
 
 #include <bits/stdc++.h>
-#include <LiquidCrystal.h>
+//#include <LiquidCrystal.h>
 #include "CTBot.h"
 
 using namespace std;
@@ -16,19 +16,29 @@ String SSID = "";
 String PASSWORD = "";
 
 // Secret Code (Telegram API Key)
-String KEY = "";
+String KEY = "***REMOVED***:AAG0HtzvxUwIJ7p1jeatlH6UGVJl1uGT_EQ";
 
 // Set FionaID
 char* FionaID0 = "***REMOVED***";
 char* FionaID1 = "***REMOVED***";
-char* FionaID2 = "";
+char* FionaID2 = "***REMOVED***";
 
 
 /*------------ Global Variables and Functions ------------*/
 
 // Set 16x2 LCD Pin
-const int rs = 12, en = 11, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+//const int rs = 12, en = 11, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
+//LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+
+// D0=16 - LED1
+// D1=5 - LED2
+// D3=0 - Piezo
+
+int LED1 = 16;
+int LED2 = 5;
+int PIEZO = 0;
+
 
 // Emergency Checker Function
 int IsEmergency(String text) {
@@ -69,7 +79,12 @@ void setup() {
   }
 
   // Start LCD
-  lcd.begin(16, 2);
+  //lcd.begin(16, 2);
+
+  // Declate LED Pins Mode
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(PIEZO, OUTPUT);
 }
 
 
@@ -83,33 +98,32 @@ void loop() {
     char* ID = (char*)notice.sender.id;
     if (strcmp(ID, FionaID0) || strcmp(ID, FionaID1) || strcmp(ID, FionaID2)) {
 
-    /*------------ LEDs, Piezo and LCD ------------*/
+      /*------------ LEDs, Piezo and LCD ------------*/
 
-      // D1,D2 - LEDs
-      // D3 - Piezo
-      // 
+      // Get any message? then Turn ON LED1
+      digitalWrite(LED1, HIGH);
 
-      digitalWrite(D1, LOW);
-      if (D1 == LOW) {
-        lcd.setCursor(0,0);
-        lcd.print(notice.text);
+      if (LED1 == HIGH) {
+        //lcd.setCursor(0,0);
+        //lcd.print(notice.text);
         Serial.println(notice.text);  // dummy line
       }
 
       // 1 = notice with /emergency, then turn on second led
-      if (D1 == LOW && 1) {
+      if (LED1 == HIGH && 1) {
         // Turn ON Emergency LED
-        digitalWrite(D2, LOW);
-        lcd.setCursor(0,0);
-        String emergencyText = (String) notice.text;
+        digitalWrite(LED2, LOW);
+        //lcd.setCursor(0,0);
+        String emergencyText = (String)notice.text;
         int last = emergencyText.length();
         String text = emergencyText.substring(11, last);
-        lcd.print(text);
+        Serial.println(text); 
+        //lcd.print(text);
 
         // Turn ON Piezo
-        digitalWrite(D3, LOW); //on
+        digitalWrite(PIEZO, HIGH);   //on
         delay(5000); // 5s
-        digitalWrite(D3, HIGH); //off
+        digitalWrite(PIEZO, LOW);  //off
       }
 
       /*------------ Response Message ------------*/
