@@ -154,7 +154,7 @@ void loop()
       if (notice.text.equalsIgnoreCase("/help"))
       {
         // Send help page to sender
-        String help = (String) "/emergency text - Send notice with emergency priority.\n\text - Send notice without any priority.\n\nnotice_Text must be longer than 10 characters.";
+        String help = (String) "/emergency text - Send notice with emergency priority.\n\text - Send notice without any priority.\n\nnotice_Text must be longer than 10 characters.\n\nTo learn more, visit https://github.com/aratheunseen/fiona/blob/main/DOCS.md";
         fiona.sendMessage(notice.sender.id, help);
       }
       else
