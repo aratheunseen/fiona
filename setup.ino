@@ -104,7 +104,7 @@ void loop()
     if (notice.text.equalsIgnoreCase("/start"))
     {
       // Send welcome message to sender
-      String welcome = (String) "Hello! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n Type '/help' to learn more.\n\n Thanks.";
+      String welcome = (String) "Hello! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n After completing the setup, Type '/help' to learn more.\n\n Thanks.";
       fiona.sendMessage(notice.sender.id, welcome);
     }
 
@@ -151,13 +151,7 @@ void loop()
 
       /*------------ Response Message ------------*/
 
-      if (notice.text.equalsIgnoreCase("/start"))
-      {
-        // Send welcome message to sender
-        String welcome = (String) "Hello! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n Type '/help' to learn more.\n\n Thanks.";
-        fiona.sendMessage(notice.sender.id, welcome);
-      }
-      else if (notice.text.equalsIgnoreCase("/help"))
+      if (notice.text.equalsIgnoreCase("/help"))
       {
         // Send help page to sender
         String help = (String) "/emergency text - Send notice with emergency priority.\n\text - Send notice without any priority.\n\nnotice_Text must be longer than 10 characters.";
