@@ -11,16 +11,16 @@ int c = 0;
 CTBot fiona;
 
 // Set Your Wi-Fi SSID Name and Password
-String SSID = "";
-String PASSWORD = "";
+String SSID = "***REMOVED***";
+String PASSWORD = "***REMOVED***";
 
 // Secret Code (Telegram API Key)
-String KEY = "";
+String KEY = "***REMOVED***";
 
 // Set FionaID
-char *FionaID0 = "";
-char *FionaID1 = "";
-char *FionaID2 = "";
+char *FionaID1 = "***REMOVED***";
+char *FionaID2 = "***REMOVED***";
+char *FionaID3 = "***REMOVED***";
 
 /*------------ Global Variables and Functions ------------*/
 
@@ -108,7 +108,7 @@ void loop()
       fiona.sendMessage(notice.sender.id, welcome);
     }
 
-    if (strcmp(ID, FionaID0) || strcmp(ID, FionaID1) || strcmp(ID, FionaID2))
+    if (strcmp(ID, FionaID1) || strcmp(ID, FionaID2) || strcmp(ID, FionaID3))
     {
 
       /*------------ LEDs, Piezo and LCD ------------*/
@@ -151,10 +151,13 @@ void loop()
 
       /*------------ Response Message ------------*/
 
-      if (notice.text.equalsIgnoreCase("/help"))
+      if(notice.text.equalsIgnoreCase("/start")){
+        // nothing
+      }
+      else if (notice.text.equalsIgnoreCase("/help"))
       {
         // Send help page to sender
-        String help = (String) "/emergency text - Send notice with emergency priority.\n\text - Send notice without any priority.\n\nnotice_Text must be longer than 10 characters.\n\nTo learn more, visit https://github.com/aratheunseen/fiona/blob/main/DOCS.md";
+        String help = (String) "/emergency text - Send notice with emergency priority.\n\ntext - Send notice without any priority.\n\nnotice_Text must be longer than 10 characters.\n\nTo learn more, visit https://github.com/aratheunseen/fiona/blob/main/DOCS.md";
         fiona.sendMessage(notice.sender.id, help);
       }
       else
