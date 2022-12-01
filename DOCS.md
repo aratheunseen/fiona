@@ -24,7 +24,7 @@ Get the ![setup code](https://github.com/aratheunseen/fiona/blob/main/setup.ino)
     char *FionaID3 = "";
 
 ## Command <a name="command"/>
-![/start]() - Start the bot and get FionaID.<br>
-![/help]() - To know the syntex of message.<br>
-![/emergency]() - To Sent notice as emergency priority.<br>
-![any_text]() - To Sent notice without any priority.
+![/start](#command) - Start the bot and get FionaID.<br>
+![/help](#command) - To know the syntex of message.<br>
+![/emergency](#command) - To Sent notice as emergency priority.<br>
+![any_text](#command) - To Sent notice without any priority.
