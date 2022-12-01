@@ -104,7 +104,7 @@ void loop()
     if (notice.text.equalsIgnoreCase("/start"))
     {
       // Send welcome message to sender
-      String welcome = (String) "Hello! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n After completing the setup, Type '/help' to learn more.\n\n Thanks.";
+      String welcome = (String) "Hello! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n After completing the setup, Type '/help' to learn more or visit https://github.com/aratheunseen/fiona/blob/main/DOCS.md\n\n Thanks.";
       fiona.sendMessage(notice.sender.id, welcome);
     }
 
