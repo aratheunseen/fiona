@@ -2,8 +2,8 @@
 Documentation for using the Fiona Smart Assistant. To test this bot visit ![FionaTheBot](https://t.me/FionaTheBot).
 
 ## Table of Contents
-- ![Setup](#setup)
-- ![Command](#command)
+- ![Setup](https://github.com/aratheunseen/fiona/edit/main/DOCS.md#setup)
+- ![Command](https://github.com/aratheunseen/fiona/edit/main/DOCS.md#command)
 
 
 ### Setup
