@@ -1,12 +1,13 @@
 # Fiona: User Manual
 Documentation for using the Fiona Smart Assistant. To test this bot visit ![FionaTheBot](https://t.me/FionaTheBot).
 
-## Table of Contents
-- ![Setup](###setup)
-- ![Command](###command)
+###  Table of Contents
+- ![Setup](#setup)
+- ![Command](#command)
 
 
-### Setup
+<a name="setup"/>
+## Setup
 Get the ![setup code](https://github.com/aratheunseen/fiona/blob/main/setup.ino) and change this part as your connection.
 
     CTBot fiona;
@@ -23,7 +24,8 @@ Get the ![setup code](https://github.com/aratheunseen/fiona/blob/main/setup.ino)
     char *FionaID2 = "";
     char *FionaID3 = "";
 
-### Command
+<a name="command"/>
+## Command
 ![/start]() - Start the bot and get FionaID.<br>
 ![/help]() - To know the syntex of message.<br>
 ![/emergency]() - To Sent notice as emergency priority.<br>
