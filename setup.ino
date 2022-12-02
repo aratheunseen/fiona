@@ -7,34 +7,31 @@
 using namespace std;
 
 /*------------ All about Connections ------------*/
-int c = 0;
 CTBot fiona;
 
 // Set Your Wi-Fi SSID Name and Password
-String SSID = "***REMOVED***";
-String PASSWORD = "***REMOVED***";
+String SSID = "";
+String PASSWORD = "";
 
 // Secret Code (Telegram API Key)
-String KEY = "***REMOVED***";
+String KEY = "";
 
 // Set FionaID
-char *FionaID1 = "***REMOVED***";
-char *FionaID2 = "***REMOVED***";
-char *FionaID3 = "***REMOVED***";
+char *FionaID0 = "";
+char *FionaID1 = "";
+char *FionaID2 = "";
 
 /*------------ Global Variables and Functions ------------*/
 
 // Set 16x2 LCD Pin
-const int rs = 15, en = 13, d4 = 0, d5 = 4, d6 = 5, d7 = 16;
+const int rs = 14, en = 2, d4 = 0, d5 = 4, d6 = 5, d7 = 16;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-// D0=16 - LED1
-// D1=5 - LED2
-// D2=4 - Piezo
+int LED1 = 12;
+int LED2 = 15;
+int PIEZO = 13; 
 
-int LED1 = 2;
-int LED2 = 14;
-int PIEZO = 12;
+String Msg = "NO MSG";
 
 // Emergency Checker Function
 int IsEmergency(String text)
@@ -45,18 +42,38 @@ int IsEmergency(String text)
   {
     splitedText[i] = tolower(splitedText[i]);
   }
-  String emergency = "/emergency";
-
-  if (splitedText == emergency)
+  
+  if (splitedText == "/emergency")
   {
     return 1;
   }
   return 0;
 }
 
+void printonlcd(String txt){
+  
+  lcd.setCursor(16, 0);
+  lcd.print(txt);
+  lcd.setCursor(0,1);
+  lcd.print("FIONA BY DISCONNECTION"); 
+	for (int scrollCounter = 0; scrollCounter < txt.length() ; scrollCounter++){ 
+    lcd.scrollDisplayLeft();
+    delay(300);
+  }
+   
+}
+
 /*------------ Setup Section ------------*/
 void setup()
 {
+  // Start LCD
+  lcd.begin(16, 2);
+
+  // Declare LED Pins Mode
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(PIEZO, OUTPUT);
+    
   Serial.begin(115200);
 
   // Connect with Internet
@@ -68,96 +85,57 @@ void setup()
   // Check the Internet Connection
   if (fiona.testConnection())
   {
-    Serial.println("\nYou are awesome. Thanks for feeding me internet."); // dummy line
-    // If Internet Connection is Ok then 'TURN ON' Built In LED
-    pinMode(2, OUTPUT);
-    digitalWrite(2, LOW);
+    // If Internet Connection is Ok
+    // dummy line
+    Serial.println("\nYou are awesome. Thanks for feeding me internet.");  
+    
+    // LED SIGNAL      
+    digitalWrite(LED2, HIGH);
+    delay(500);
+    digitalWrite(LED1, HIGH);
+    delay(500);            
+    digitalWrite(LED2, LOW);
+    digitalWrite(LED1, LOW); 
+    
   }
   else
   {
     // If Internet Connection is not Ok
-    Serial.println("\nOhho! No Internet. I am Hungry."); // dummy line
+    // dummy line
+    Serial.println("\nOhho! No Internet. I am Hungry.");           
   }
-
-  // Start LCD
-  lcd.begin(16, 2);
-
-  // Declate LED Pins Mode
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
-  pinMode(PIEZO, OUTPUT);
-
-  digitalWrite(LED1, LOW);
 }
 
 /*------------ Loop Section ------------*/
 
 void loop()
 {
-  TBMessage notice;
-
+  TBMessage notice;  
+   
   // Check Incoming Message
   if (CTBotMessageText == fiona.getNewMessage(notice))
   {
+       
     char *ID = (char *)notice.sender.id;
 
     if (notice.text.equalsIgnoreCase("/start"))
     {
       // Send welcome message to sender
-      String welcome = (String) "Hello! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n After completing the setup, Type '/help' to learn more or visit https://github.com/aratheunseen/fiona/blob/main/DOCS.md\n\n Thanks.";
+      String welcome = (String) "Hello! Your FionaID is " + notice.sender.id + ". You can use this ID to make your system unique.\n\n After completing the setup, Type '/help' to learn more.\n\n Thanks.";
       fiona.sendMessage(notice.sender.id, welcome);
     }
 
-    if (strcmp(ID, FionaID1) || strcmp(ID, FionaID2) || strcmp(ID, FionaID3))
+    //Check ID  
+    if (strcmp(ID, FionaID0) || strcmp(ID, FionaID1) || strcmp(ID, FionaID2))
     {
-
-      /*------------ LEDs, Piezo and LCD ------------*/
-
-      // Get any message? then Turn ON LED1
-      digitalWrite(LED1, HIGH);
-      c = 1;
-
-      if (c == 1)
-      {
-
-        lcd.print(notice.text);
-
-        /*for (int j=0 ; j <= notice.text.length(); j++){
-          lcd.setCursor(j,0);
-          lcd.print(notice.text);
-          delay(200);
-          lcd.clear();
-        }*/
-
-        Serial.println(notice.text);
-      }
-
-      // 1 = notice with /emergency, then turn on second led
       String text = (String)notice.text;
-      if ((c == 1) && IsEmergency(text))
-      {
-        // Turn ON Emergency LED
-        digitalWrite(LED2, HIGH);
-        // lcd.setCursor(0,0);
-        String emergencyText = (String)notice.text;
-        int last = emergencyText.length();
-        String text1 = emergencyText.substring(11, last);
-        lcd.setCursor(1, 0);
-        lcd.print(text1);
 
-        // Turn ON Piezo
-        digitalWrite(PIEZO, HIGH); // on
-      }
-
-      /*------------ Response Message ------------*/
-
-      if(notice.text.equalsIgnoreCase("/start")){
-        // nothing
-      }
-      else if (notice.text.equalsIgnoreCase("/help"))
+      /*------------ Response & Message ------------*/
+      
+      if (notice.text.equalsIgnoreCase("/help"))
       {
         // Send help page to sender
-        String help = (String) "/emergency text - Send notice with emergency priority.\n\ntext - Send notice without any priority.\n\nnotice_Text must be longer than 10 characters.\n\nTo learn more, visit https://github.com/aratheunseen/fiona/blob/main/DOCS.md";
+        String help = (String) "/emergency text - Send notice with emergency priority.\n\text - Send notice without any priority.\n\nnotice_Text must be longer than 10 characters.\n\nTo learn more, visit https://github.com/aratheunseen/fiona/blob/main/DOCS.md";
         fiona.sendMessage(notice.sender.id, help);
       }
       else
@@ -173,19 +151,44 @@ void loop()
           String report = (String) "Invalid notice. Type '/emergency text' to send emergency notice.";
           fiona.sendMessage(notice.sender.id, report);
         }
-        else if (IsEmergency(text) == 1 && text.length() > 11)
-        {
-          // Send notice as emergency report
+        //Emergency Notice       
+        else if (IsEmergency(text) == 1 && text.length() > 11){        
+          //LED
+          digitalWrite(LED2, HIGH);
+          digitalWrite(LED1, HIGH); 
+          
+          //LCD          
+          String emergencyText = (String)notice.text;
+          int last = emergencyText.length();
+          lcd.clear();
+          Msg = emergencyText.substring(11, last);          
+                 
+          // Toggle Piezo for 5s
+          digitalWrite(PIEZO, HIGH);
+          delay(5000);
+          digitalWrite(PIEZO, LOW);
+
+          // Send notice as emergency report                     
           String report = (String) "Notice has been published as emergency.";
           fiona.sendMessage(notice.sender.id, report);
         }
-        else
-        {
-          // Send notice delivered report
+        //General Notice
+        else{              
+          //LED
+          digitalWrite(LED1, HIGH); 
+          digitalWrite(LED2, LOW); 
+          
+          //LCD
+          lcd.clear();
+          Msg = (String)notice.text;                  
+          
+          // Send notice delivered report  
+          Serial.println(notice.text);        
           String report = (String) "Notice has been published.";
           fiona.sendMessage(notice.sender.id, report);
         }
       }
     }
   }
+  printonlcd(Msg);    
 }
