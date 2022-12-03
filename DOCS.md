@@ -9,8 +9,6 @@ Documentation for using the Fiona Smart Assistant. To test this bot visit ![Fion
 ## Setup <a name="setup"/>
 Get the ![setup code](https://github.com/aratheunseen/fiona/blob/main/setup.ino) and change this part as your connection.
 
-    CTBot fiona;
-
     // Set Your Wi-Fi SSID Name and Password
     String SSID = "";
     String PASSWORD = "";
