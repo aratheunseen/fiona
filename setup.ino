@@ -24,7 +24,7 @@ char *FionaID2 = "";
 
 /*------------ Global Variables and Functions ------------*/
 
-String newNotice = "No new messages.";
+String newNotice = "";
 
 // Set 16x2 LCD Pin
 const int rs = 14, en = 2, d4 = 0, d5 = 4, d6 = 5, d7 = 16;
@@ -57,7 +57,7 @@ void showOnLCD(String txt) {
   lcd.print("{fiona:} by Team Disconnection");
   for (int scrollCounter = 0; scrollCounter < txt.length(); scrollCounter++) {
     lcd.scrollDisplayLeft();
-    delay(300);
+    delay(400);
   }
 }
 
@@ -88,6 +88,19 @@ void setup() {
     delay(500);
     digitalWrite(LED2, LOW);
     digitalWrite(LED1, LOW);
+    lcd.clear();
+    newNotice = "No new messages";
+  }
+  else{
+    // If Internet Connection is not Ok
+    digitalWrite(LED1, HIGH);
+    delay(500);
+    digitalWrite(LED2, HIGH);
+    delay(5000);
+    digitalWrite(LED2, LOW);
+    digitalWrite(LED1, LOW);
+    lcd.clear();
+    newNotice = "No Internet Connection";
   }
 }
 
