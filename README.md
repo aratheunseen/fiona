@@ -1,5 +1,5 @@
 # Fiona: a smart assistant
-
+To setup your smart assistant system, read [this document](https://github.com/aratheunseen/fiona/blob/main/DOCS.md).
 
 ## Requirements
 - Arduino IDE
