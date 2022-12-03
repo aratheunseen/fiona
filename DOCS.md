@@ -1,5 +1,5 @@
 # Fiona: User Manual
-Documentation for using the Fiona Smart Assistant. To test this bot visit ![FionaTheBot](https://t.me/FionaTheBot).
+Documentation for using the Fiona Smart Assistant. To test this bot visit [FionaTheBot](https://t.me/FionaTheBot).
 
 ###  Table of Contents
 - [Setup](#setup)
