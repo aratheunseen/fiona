@@ -51,7 +51,7 @@ int IsEmergency(String text) {
 // Show notice on LCD Function
 void showOnLCD(String txt) {
 
-  lcd.setCursor(16, 0);
+  lcd.setCursor(0, 0);
   lcd.print(txt);
   lcd.setCursor(0, 1);
   lcd.print("{fiona:} by Team Disconnection");
@@ -70,8 +70,6 @@ void setup() {
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
   pinMode(PIEZO, OUTPUT);
-
-  Serial.begin(115200);
 
   // Connect with Internet
   fiona.wifiConnect(SSID, PASSWORD);
